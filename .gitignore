@@ -1,0 +1,18 @@
+# Bỏ qua thư mục virtual environment
+venv/
+
+# Bỏ qua file cache của Python
+__pycache__/
+
+# Bỏ qua file cấu hình hệ thống
+*.pyc
+*.pyo
+*.pyd
+
+
+
+# Bỏ qua file môi trường (nếu có)
+.env
+
+# Bỏ qua file logs và database tạm
+*.log
