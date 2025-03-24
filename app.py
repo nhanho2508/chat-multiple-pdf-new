@@ -2,9 +2,11 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 import tempfile
-from utils import get_pdf_text, get_text_chunks, get_vector_store, get_conversation_chain
+from utils import get_pdf_text, get_text_chunks, get_vector_store, get_conversation_chain, summarize_text_from_documents
 from html_lib import bot_template, user_template, not_found_template
 from gtts import gTTS  # Thư viện chuyển văn bản thành giọng nói
+from io import StringIO
+from io import BytesIO
 
 def save_chat_history():
     """
@@ -40,6 +42,7 @@ def handle_userinput(user_question):
         st.error("⚠️ Please upload PDFs and click 'Process' before asking questions.")
         return
 
+
     response = st.session_state.conversation.invoke({'question': user_question})
     st.session_state.chat_history = response['chat_history']
 
@@ -48,10 +51,30 @@ def handle_userinput(user_question):
             st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
         else:
             if "I don't know" in message.content or "I couldn't find an answer" in message.content:
-                st.write(not_found_template, unsafe_allow_html=True)  # Hiển thị UI khi không có câu trả lời
+                st.write(not_found_template, unsafe_allow_html=True)
             else:
                 st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
-                text_to_speech(message.content)  # Chuyển văn bản thành giọng nói
+                text_to_speech(message.content)
+
+
+
+
+
+def generate_report(documents, open_ai_keys):
+    """
+    Tạo báo cáo từ nội dung các tài liệu đã tải lên và cung cấp khả năng tải xuống.
+    """
+    # Tóm tắt nội dung từ các tài liệu
+    summarized_text = summarize_text_from_documents(documents, open_ai_keys)
+
+    # Tạo báo cáo từ nội dung tóm tắt
+    report_content = f"Document Summary Report\n\nSummarized Content:\n{summarized_text}"
+
+    # Chuyển đổi nội dung báo cáo thành dạng bytes
+    report_bytes = BytesIO(report_content.encode("utf-8"))
+
+    # Cho phép người dùng tải xuống báo cáo
+    return report_bytes
 
 def main():
     """
@@ -60,7 +83,7 @@ def main():
     load_dotenv()
     open_ai_keys = os.getenv("OPENAI_API_KEY")
 
-    st.set_page_config(page_title="Chat with multiple PDFs", page_icon="📚")
+    st.set_page_config(page_title="Chat with multiple Documents", page_icon="📚")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -98,6 +121,23 @@ def main():
             save_chat_history()
             with open("chat_history.txt", "rb") as file:
                 st.download_button("⬇️ Download Chat History", file, "chat_history.txt")
+
+        if st.button("Generate Report"):
+        # Kiểm tra xem đã có tài liệu nào được tải lên chưa
+            if not pdf_docs:
+                st.error("⚠️ Please upload at least one PDF before generating the report.")
+            else:
+                # Xử lý tạo báo cáo từ các tài liệu PDF
+                with st.spinner("🔄 Generating Report..."):
+                    raw_text = get_pdf_text(pdf_docs)  # Lấy nội dung văn bản từ tài liệu
+                    text_chunks = get_text_chunks(raw_text)  # Chia văn bản thành các đoạn nhỏ
+                    if not text_chunks:
+                        st.error("⚠️ No text extracted from the uploaded PDFs. Please check the file content.")
+                    else:
+                        # Tạo báo cáo từ nội dung đã được chia thành các đoạn
+                        documents = [{'text': chunk} for chunk in text_chunks]
+                        report_bytes = generate_report(documents, open_ai_keys)  # Tạo báo cáo từ nội dung tài liệu
+                        st.download_button("⬇️ Download Report", report_bytes, "document_report.txt", "text/plain")
 
 if __name__ == '__main__':
     main()

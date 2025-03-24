@@ -1,4 +1,4 @@
-# 📚 Chat with Multiple PDFs using LangChain & FAISS
+# 📚 Chat with Multiple Documents using LangChain & FAISS
 
 This is a **PDF-based chatbot application** that allows users to upload multiple PDFs and interact with them using **OpenAI** models. It leverages **LangChain** for conversational AI and **FAISS** for efficient vector storage.
 
@@ -6,7 +6,7 @@ This is a **PDF-based chatbot application** that allows users to upload multiple
 
 ## 🚀 Features
 
-✅ **Upload multiple PDFs** and chat with their content\
+✅ **Upload multiple Documents** and chat with their content\
 ✅ **Persistent FAISS Vector Store** for fast access\
 ✅ **User-friendly UI** built with **Streamlit**\
 ✅ **Text-to-Speech (TTS) Support** for bot responses\
