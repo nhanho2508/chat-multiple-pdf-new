@@ -1,6 +1,6 @@
 # 📚 Chat with Multiple Documents using LangChain & FAISS
 
-This is a **PDF-based chatbot application** that allows users to upload multiple PDFs and interact with them using **OpenAI** models. It leverages **LangChain** for conversational AI and **FAISS** for efficient vector storage.
+This is a **document-based chatbot application** that allows users to upload multiple documents and interact with them using **OpenAI** models. It leverages **LangChain** for conversational AI and **FAISS** for efficient vector storage.
 
 ---
 
@@ -63,7 +63,7 @@ Open the **local URL** provided by Streamlit to start using the chatbot.
 ```
 📂 multiple-pdf-chat
 │── 📂 faiss_index/           # Stores FAISS vector database
-│── 📂 utils.py               # Handles PDF processing & vector storage
+│── 📂 utils.py               # Handles Documents processing & vector storage
 │── 📂 html_lib.py            # Manages UI templates (bot/user chat, errors)
 │── 📂 app.py                 # Main application logic
 │── 📄 requirements.txt       # Dependencies
@@ -78,7 +78,7 @@ Open the **local URL** provided by Streamlit to start using the chatbot.
 - [**Streamlit**](https://streamlit.io/) - Web UI
 - [**LangChain**](https://www.langchain.com/) - Conversational AI framework
 - [**FAISS**](https://faiss.ai/) - Vector database
-- [**PyPDF2**](https://pypdf2.readthedocs.io/) - PDF processing
+- [**PyPDF2**](https://pypdf2.readthedocs.io/) - Documents processing
 - [**gTTS**](https://gtts.readthedocs.io/) - Text-to-Speech
 - [**dotenv**](https://pypi.org/project/python-dotenv/) - Environment variable management
 
@@ -86,8 +86,8 @@ Open the **local URL** provided by Streamlit to start using the chatbot.
 
 ## ⚡ **How FAISS Works in this Project**
 
-- **First Run:** When you upload PDFs, **FAISS stores the vectors** in `faiss_index/`.
-- **Subsequent Runs:** Instead of reprocessing PDFs, the chatbot **loads vectors from FAISS** for faster performance.
+- **First Run:** When you upload documents, **FAISS stores the vectors** in `faiss_index/`.
+- **Subsequent Runs:** Instead of reprocessing Documents, the chatbot **loads vectors from FAISS** for faster performance.
 
 ---
 
